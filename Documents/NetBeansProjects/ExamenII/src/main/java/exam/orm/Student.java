@@ -14,8 +14,8 @@ import java.io.Serializable;
 public class Student implements Serializable {
 
     public enum Gender {
-        MALE,
-        FEMALE
+        M,
+        F
     }
     private int id;
     private String name;

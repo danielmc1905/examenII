@@ -6,13 +6,6 @@
 package exam.dao;
 
 import exam.orm.Student;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
@@ -123,9 +116,10 @@ public class StudentDAO implements Serializable {
         DefaultTableModel model = new DefaultTableModel();
         String labels[] = {
             "ID", "NAME", "LAST NAME", "BIRTH DATE",
-            "AGE", "GENDER", "EMAIL", "PHONE", "CAREER", "ADDRESS"};
+            "AGE", "GENDER", "EMAIL", "PHONE", "CAREER", "STREET",
+            "STATE", "COUNTRY"};
         model.setColumnIdentifiers(labels);
-        String row[] = new String[10];
+        String row[] = new String[12];
         for (Student student : studentList) {
             row[0] = "" + student.getId();
             row[1] = student.getName();
@@ -136,56 +130,11 @@ public class StudentDAO implements Serializable {
             row[6] = student.getEmail();
             row[7] = student.getPhone();
             row[8] = student.getCareer();
-            row[9] = "" + student.getAddress();
+            row[9] = student.getAddress().getStreet();
+            row[10] = student.getAddress().getState();
+            row[11] = student.getAddress().getCountry();
             model.addRow(row);
         }
         return model;
-    }
-
-    /**
-     * Read the students from the file
-     *
-     * @author Admin01
-     */
-    public void readStudents() {
-        try {
-            File file = new File("students.txt");
-            if (file.exists()) {
-                ObjectInputStream inputFile = new ObjectInputStream(
-                        new FileInputStream(file));
-                studentList = (ArrayList) inputFile.readObject();
-                inputFile.close();
-            }
-        } catch (ClassNotFoundException cnfe) {
-            System.out.println("Error: class couldn't be found");
-        } catch (FileNotFoundException fnfe) {
-            System.out.println("Error: file couldn't be found!");
-        } catch (IOException ioe) {
-            System.out.println("Error: file couldn't be read!");
-        }
-    }
-
-    /**
-     * Add students to the file
-     *
-     * @author Admin01
-     */
-    public void saveStudent() {
-        String file = "students.txt";
-        if (!studentList.isEmpty()) {
-            try {
-                ObjectOutputStream outputFile = new ObjectOutputStream(
-                        new FileOutputStream(file));
-                outputFile.writeObject(studentList);
-                outputFile.flush();
-                outputFile.close();
-            } catch (FileNotFoundException fnte) {
-                System.out.println("Error: file couldn't be found!");
-            } catch (IOException ioe) {
-                System.out.println("Error: failed to write in the file " + file + ".");
-            }
-        } else {
-            System.out.println("There aren't students to save, the list is empty!");
-        }
     }
 }
